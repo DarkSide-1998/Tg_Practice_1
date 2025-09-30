@@ -1,8 +1,0 @@
-2025-09-29 21:06:34,662 - aiogram.dispatcher - INFO - Start polling
-2025-09-29 21:06:34,745 - aiogram.dispatcher - INFO - Run polling for bot @parserboter_bot id=8322861815 - 'Parser_botan'
-2025-09-29 21:06:40,541 - aiogram.event - INFO - Update id=10697888 is not handled. Duration 0 ms by bot id=8322861815
-2025-09-29 21:07:14,250 - aiogram.dispatcher - INFO - Polling stopped
-2025-09-29 21:07:14,250 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
-2025-09-29 21:07:14,250 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8322861815)
-2025-09-29 21:07:14,512 - aiogram.dispatcher - INFO - Polling stopped for bot @parserboter_bot id=8322861815 - 'Parser_botan'
-2025-09-29 21:07:14,512 - root - INFO - Manual stopping bot.
