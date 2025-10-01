@@ -4,6 +4,8 @@ import logging
 from aiogram import Bot
 from create_bot import bot, dp
 
+from Routers import routers
+
 # from DataBase import create_db, drop_db, session_maker
 # from Middlewares import DataBaseSession
 
@@ -31,6 +33,7 @@ async def main():
     await bot.delete_webhook(drop_pending_updates=True)
     
     # Здесь включаются роутеры!!
+    dp.include_routers(*routers)
 
     await dp.start_polling(bot)
 
