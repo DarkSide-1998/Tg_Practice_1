@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 
 from Decorators import AutoDeleteMessage
 
-from Keyboards import key_board_user, inline_keyboard_cancel
+from Keyboards import key_board_user, inline_keyboard_cancel, inline_prewiev_before_db
 
 from Statements import UserStatements
 
@@ -30,14 +30,18 @@ async def greeting(update: Message | CallbackQuery, state: FSMContext) -> None:
                                     """, reply_markup=key_board_user())
     await state.clear()
     
-    
+
+@user_router.callback_query(F.data == "reset")    
 @user_router.message(StateFilter(None), F.text.lower() == "создать карточку")
 @AutoDeleteMessage(num_id_prew=1)
-async def name_user(message: Message, state: FSMContext):
-    await message.answer("""
+async def name_user(message: Message | CallbackQuery, state: FSMContext):
+    if isinstance(message, Message):
+        await message.answer("""
 Введите имя:
 Условие: от 3 до 16 символов с использованием только латинских больший, маленьких букв, цифр и знаков подчеркивания, вместо пробелов
                    """, reply_markup=inline_keyboard_cancel())
+    else:
+        state.clear()
     await state.set_state(UserStatements.name)
     
     
@@ -103,6 +107,7 @@ async def city_user(message: Message, state: FSMContext):
 @user_router.message(UserStatements.description)
 @AutoDeleteMessage(num_id_prew=1)
 async def city_user(message: Message, state: FSMContext):
+    await state.update_data(description=message.text)
     data = await state.get_data()
     await message.answer(f"""
 Поздравляем - у вас новая карточка: Проверьте данные
@@ -110,5 +115,5 @@ async def city_user(message: Message, state: FSMContext):
 Возраст: {data["age"]}
 Город: {data["city"]}
 Семейное положение: {data["social_status"]}
-Дополнительная информация: {message.text}
-                   """, reply_markup=inline_keyboard_cancel())
+Дополнительная информация: {data["description"]}
+                   """, reply_markup=inline_prewiev_before_db())

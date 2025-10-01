@@ -1,5 +1,5 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import String, Text, Float, DateTime, func
+from sqlalchemy import String, Text, Float, DateTime, func, Integer
 from dataclasses import dataclass
 
 
@@ -15,6 +15,10 @@ class Attributes(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(150), nullable=False)
-    description: Mapped[str] = mapped_column(Text)
-    price: Mapped[float] = mapped_column(Float(asdecimal=True), nullable=False)
-    image: Mapped[str] = mapped_column(String(150))
+    age: Mapped[str] = mapped_column(Text)
+    city: Mapped[float] = mapped_column(Float(asdecimal=True), nullable=False)
+    description: Mapped[str] = mapped_column(String(150))
+    id_telegram_user: Mapped[int] = mapped_column(Integer, nullable=False)
+    rating: Mapped[int] = mapped_column(Integer, nullable=False)
+    messages: Mapped[int] = mapped_column(Integer, nullable=False)
+    strikes: Mapped[int] = mapped_column(Integer, nullable=False)

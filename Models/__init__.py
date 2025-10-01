@@ -1,5 +1,5 @@
 from .DB_model import DataBaseModel
-from .TableModels import Base
+from .TableModels import Attributes
 
 
 data_base = DataBaseModel()
