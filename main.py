@@ -29,7 +29,7 @@ async def main():
     # dp.shutdown.register(on_shutdown)
 
     # Включаем все миддлвари тут
-    # dp.update.middleware(DataBaseSession(session_pool=session_maker))
+    dp.update.middleware(DataBaseSession(session_pool=session_maker))
 
     await bot.delete_webhook(drop_pending_updates=True)
     

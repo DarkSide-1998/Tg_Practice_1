@@ -33,9 +33,14 @@ async def greeting_admin(update: Message | CallbackQuery, state: FSMContext):
     await state.clear() 
     
     
-@admin_router.message(StateFilter(None), F.text.lower() == "найти карточку по ID")
+@admin_router.message(StateFilter(None), F.text.lower() == "найти карточку по id")
 async def search_id(message: Message, state: FSMContext):
     await message.answer("""
 Введите ID:
                    """, reply_markup=inline_keyboard_cancel())
     await state.set_state(AdminStatements.id)
+    
+    
+@admin_router.message(IsAdmin(), AdminStatements.id_user)
+async def invalid_number(message: Message):
+    await message.answer("Введите корректный айди юзернейма Телеграм для поиска - пример: 123456789")

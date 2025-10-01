@@ -12,7 +12,7 @@ async def orm_add(session: AsyncSession, table) -> None:
     session.commit()
     
     
-async def orm_get_all_cards(session: AsyncSession, table) -> Dict[str, Any]:
+async def orm_get_all_cards(session: AsyncSession) -> Dict[str, Any]:
     query = select(Attributes)
     result = await session.execute(query)
     return result.scalars().all()
