@@ -34,14 +34,18 @@ async def greeting(update: Message | CallbackQuery, state: FSMContext) -> None:
 @user_router.callback_query(F.data == "reset")    
 @user_router.message(StateFilter(None), F.text.lower() == "создать карточку")
 @AutoDeleteMessage(num_id_prew=1)
-async def name_user(message: Message | CallbackQuery, state: FSMContext):
-    if isinstance(message, Message):
-        await message.answer("""
+async def name_user(update: Message | CallbackQuery, state: FSMContext):
+    if isinstance(update, CallbackQuery):
+        await update.message.answer("""
 Введите имя:
 Условие: от 3 до 16 символов с использованием только латинских больший, маленьких букв, цифр и знаков подчеркивания, вместо пробелов
                    """, reply_markup=inline_keyboard_cancel())
+        await state.clear()
     else:
-        state.clear()
+        await update.answer("""
+Введите имя:
+Условие: от 3 до 16 символов с использованием только латинских больший, маленьких букв, цифр и знаков подчеркивания, вместо пробелов
+                   """, reply_markup=inline_keyboard_cancel())
     await state.set_state(UserStatements.name)
     
     
@@ -110,7 +114,7 @@ async def city_user(message: Message, state: FSMContext):
     await state.update_data(description=message.text)
     data = await state.get_data()
     await message.answer(f"""
-Поздравляем - у вас новая карточка: Проверьте данные
+Проверьте данные:
 Имя: {data["name"]}
 Возраст: {data["age"]}
 Город: {data["city"]}

@@ -8,7 +8,8 @@ from Routers import routers
 from DB_Handlers import db_router
 
 from DataBase import create_db, drop_db, session_maker
-# from Middlewares import DataBaseSession
+
+from Middlewares import DataBaseSession
 
 
 async def on_startup(bot: Bot):
@@ -28,13 +29,13 @@ async def main():
     dp.startup.register(on_startup)
     # dp.shutdown.register(on_shutdown)
 
-    # Включаем все миддлвари тут
+    # Включаем все миддлвари тут (глобальные) или в роутерах (локальные)
     dp.update.middleware(DataBaseSession(session_pool=session_maker))
 
     await bot.delete_webhook(drop_pending_updates=True)
     
     # Здесь включаются роутеры!!
-    dp.include_routers(*(*routers, db_router))
+    dp.include_routers(*(db_router, *routers))
 
     await dp.start_polling(bot)
 

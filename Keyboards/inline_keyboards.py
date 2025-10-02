@@ -20,5 +20,6 @@ def inline_prewiev_before_db() -> InlineKeyboardMarkup:
 def inline_deleter_card(id_user_telegram: int) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(text="Удалить карточку", callback_data=f"delete_card:{id_user_telegram}")
-    kb.adjust(1)
+    kb.button(text="Вернуться в меню", callback_data="back_to_menu")
+    kb.adjust(2)
     return kb.as_markup(resize_keyboard=True)

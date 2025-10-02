@@ -8,7 +8,7 @@ class DataBaseSession(BaseMiddleware):
     def __init__(self, session_pool: async_sessionmaker):
         self.session_pool = session_pool
 
-    def __call__(self,
+    async def __call__(self,
                  handler: Callable[[TelegramObject, dict[str, Any]], Awaitable[Any]],
                  event: TelegramObject,
                  data: dict[str, Any],

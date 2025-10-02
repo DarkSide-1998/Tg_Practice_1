@@ -15,10 +15,13 @@ class Attributes(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(150), nullable=False)
-    age: Mapped[str] = mapped_column(Text)
-    city: Mapped[float] = mapped_column(Float(asdecimal=True), nullable=False)
+    age: Mapped[int] = mapped_column(Integer, nullable=False)
+    city: Mapped[str] = mapped_column(String(50))
+    social_status: Mapped[str] = mapped_column(String(50))
     description: Mapped[str] = mapped_column(String(150))
     id_telegram_user: Mapped[int] = mapped_column(Integer, nullable=False)
     rating: Mapped[int] = mapped_column(Integer, nullable=False)
     messages: Mapped[int] = mapped_column(Integer, nullable=False)
     strikes: Mapped[int] = mapped_column(Integer, nullable=False)
+    
+    
