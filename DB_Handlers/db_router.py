@@ -20,11 +20,12 @@ from Keyboards import key_board_user, key_board_admin, inline_deleter_card
 
 
 db_router = Router()
-db_router.message.filter(AutoDeleteMessage(num_id_prew=1))
+db_router.message.middleware(DataBaseSession(session_pool=session_maker))
+db_router.callback_query.middleware(DataBaseSession(session_pool=session_maker))
 
 
-@AutoDeleteMessage(num_id_prew=1)
 @db_router.callback_query(F.data == "sender")
+@AutoDeleteMessage(num_id_prew=0)
 async def load_to_db_usercard(update: CallbackQuery, state: FSMContext, session: AsyncSession):
     # Здесь если карточки уникальной нет - записать новую, иначе - перезаписать старую
     data = await state.get_data()
@@ -40,7 +41,6 @@ async def load_to_db_usercard(update: CallbackQuery, state: FSMContext, session:
         strikes=0,
     )
     card = await orm_get_card(session, update.from_user.id)
-    print(card)
     if card:
         await orm_update_card(session, card.id_telegram_user, table)
         await update.message.answer("Карточка обновлена!", reply_markup=key_board_user())
@@ -52,9 +52,9 @@ async def load_to_db_usercard(update: CallbackQuery, state: FSMContext, session:
                    """, reply_markup=key_board_user())
     await state.clear()
     
-
-@AutoDeleteMessage(num_id_prew=1)    
+    
 @db_router.message(StateFilter(None), F.text.lower() == "посмотреть карточку")
+@AutoDeleteMessage(num_id_prew=1)
 async def load_from_db_card(message: Message, session: AsyncSession):
     card = await orm_get_card(session, message.from_user.id)
     if card:
@@ -73,8 +73,8 @@ async def load_from_db_card(message: Message, session: AsyncSession):
         await message.answer("Похоже, у Вас нет карточки в нашей базе. Предлагаем создать новую!", reply_markup=key_board_user())
         
 
-@AutoDeleteMessage(num_id_prew=1)
 @db_router.message(IsAdmin(), StateFilter(None), F.text.lower() == "выгрузить все карточки")
+@AutoDeleteMessage(num_id_prew=1)
 async def admin_load_all_cards(message: Message, session: AsyncSession):
     string_text: str = ""
     for card in await orm_get_all_cards(session):
@@ -85,8 +85,8 @@ async def admin_load_all_cards(message: Message, session: AsyncSession):
         await message.answer("Карточек в базе нет.", reply_markup=key_board_admin())
     
 
-@AutoDeleteMessage(num_id_prew=1) 
 @db_router.message(IsAdmin(), IsValidNumber(1,9_999_999_999), AdminStatements.id_user)
+@AutoDeleteMessage(num_id_prew=1) 
 async def admin_load_one_card(message: Message, state: FSMContext, session: AsyncSession):
     await state.update_data(id_user=int(message.text))
     card = await orm_get_card(session, int(message.text))
@@ -106,9 +106,9 @@ async def admin_load_one_card(message: Message, state: FSMContext, session: Asyn
         await message.answer("Такой карточки в базе нет!", reply_markup=key_board_admin())
         await state.clear()
         
-
-@AutoDeleteMessage(num_id_prew=1)        
+        
 @db_router.callback_query(F.data.contains("delete_card"))
+@AutoDeleteMessage(num_id_prew=0)
 async def admin_delete_card_from_db(update: CallbackQuery, state: FSMContext, session: AsyncSession):
     data = await state.get_data()
     await orm_delete_card(session, data["id_user"])
